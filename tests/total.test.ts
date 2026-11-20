@@ -48,6 +48,15 @@ describe('calculateTotals', () => {
     expect(totals).toEqual({ subtotalCents: 4200, discountCents: 500, totalCents: 3700 });
   });
 
+  it('no deja que un cupón fijo mayor que el subtotal haga el total negativo (issue #1)', () => {
+    const totals = calculateTotals(
+      [{ unitPriceCents: 1295, quantity: 1 }],
+      coupon({ code: 'REGALO25', type: 'fixed', value: 2500 }),
+    );
+
+    expect(totals).toEqual({ subtotalCents: 1295, discountCents: 1295, totalCents: 0 });
+  });
+
   it('no descuenta nada si no se llega al pedido mínimo', () => {
     const totals = calculateTotals(
       [{ unitPriceCents: 1295, quantity: 1 }],
